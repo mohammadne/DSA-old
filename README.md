@@ -1,4 +1,4 @@
-# DATA STRUCTURES AND ALGORITHMS
+# ALGORITHMS AND DATA STRUCTURES
 
 ### Our focus is on the problem
 
