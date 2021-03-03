@@ -1,4 +1,4 @@
-package main
+package maxsubsum
 
 func maxSubSum4(vector []int) int {
 	maxSum := 0

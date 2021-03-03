@@ -1,8 +1,4 @@
-package main
-
-func main() {
-
-}
+package maxsubsum
 
 func max(vars ...int) int {
 	max := vars[0]

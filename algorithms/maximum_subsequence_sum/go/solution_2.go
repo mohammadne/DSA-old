@@ -1,4 +1,4 @@
-package main
+package maxsubsum
 
 // maxSubSum2 is Quadratic maximum contiguous subsequence sum algorithm.
 func maxSubSum2(vector []int) int {

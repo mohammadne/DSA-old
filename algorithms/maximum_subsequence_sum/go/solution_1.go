@@ -1,4 +1,4 @@
-package main
+package maxsubsum
 
 // maxSubSum1 is CUBIT maximum contiguous subsequence sum algorithm.
 func maxSubSum1(vector []int) int {

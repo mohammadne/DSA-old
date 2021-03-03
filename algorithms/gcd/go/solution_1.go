@@ -1,4 +1,4 @@
-package main
+package gcd
 
 func gcd(num1 int, num2 int) int {
 	for num2 != 0 {

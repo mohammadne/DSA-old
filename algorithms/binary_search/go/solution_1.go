@@ -1,4 +1,4 @@
-package main
+package binarysearch
 
 func binarySearch(inputs []int, x int) int {
 	low, high := 0, len(inputs)

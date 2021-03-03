@@ -1,4 +1,4 @@
-package main
+package maxsubsum
 
 // maxSubSum3 is Driver for divide-and-conquer maximum contiguous
 // subsequence sum algorithm.
