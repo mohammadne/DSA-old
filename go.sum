@@ -10,6 +10,10 @@ github.com/mohammadne/data_structures/queue v0.0.0-20210405154757-a7d61f3620a5 h
 github.com/mohammadne/data_structures/queue v0.0.0-20210405154757-a7d61f3620a5/go.mod h1:i51s4ZzqjI4NhoKU329C7fzAxPFP7rBN7ez331G6oI8=
 github.com/mohammadne/data_structures/queue v0.0.0-20210405160043-deb42a735f5a h1:vusWskZ9FRmQUX3qcWYo3cgXEnj8udtY53MWNVdipKg=
 github.com/mohammadne/data_structures/queue v0.0.0-20210405160043-deb42a735f5a/go.mod h1:i51s4ZzqjI4NhoKU329C7fzAxPFP7rBN7ez331G6oI8=
+github.com/mohammadne/data_structures/queue v0.0.0-20210405171009-257476a5cd19 h1:zNe2LbEUofLoHGKTMrsVrekpLo+k6tBMQp77sVGg3Qw=
+github.com/mohammadne/data_structures/queue v0.0.0-20210405171009-257476a5cd19/go.mod h1:i51s4ZzqjI4NhoKU329C7fzAxPFP7rBN7ez331G6oI8=
+github.com/mohammadne/data_structures/queue v0.0.0-20210405174833-e077229f98d1 h1:eyVC/ShkplxYhxNNr1Y/nAlgpNAxhcsKxKZ/OoV+yrw=
+github.com/mohammadne/data_structures/queue v0.0.0-20210405174833-e077229f98d1/go.mod h1:i51s4ZzqjI4NhoKU329C7fzAxPFP7rBN7ez331G6oI8=
 github.com/mohammadne/data_structures/stack v0.0.0-20210405142902-6e67fb5f2035/go.mod h1:Ob+XBBl4AcSAglu6xuOPTCHvw0LsVs32aYBBHRjQRiM=
 github.com/mohammadne/data_structures/stack v0.0.0-20210405154757-a7d61f3620a5 h1:TMzLNU8EWAxWlnCcbLimJ+17gAMObmFKdGyG+ml7a0c=
 github.com/mohammadne/data_structures/stack v0.0.0-20210405154757-a7d61f3620a5/go.mod h1:Ob+XBBl4AcSAglu6xuOPTCHvw0LsVs32aYBBHRjQRiM=

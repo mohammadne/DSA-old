@@ -3,3 +3,6 @@
 
 ### blogs:
 - https://codetree.dev/golang-graph-traversal/
+
+
+## focus that the direction matters

@@ -1,5 +1,59 @@
 package main
 
+import (
+	"fmt"
+
+	"github.com/mohammadne/data_structures/graph"
+	"github.com/mohammadne/data_structures/queue"
+)
+
+func main() {
+	g := graph.NewGraph(true)
+
+	g.AddVertex(1)
+	g.AddVertex(2)
+	g.AddVertex(3)
+	g.AddVertex(4)
+
+	g.AddEdge(1, 2)
+	g.AddEdge(2, 3)
+	g.AddEdge(2, 4)
+	g.AddEdge(4, 1)
+
+	fmt.Print(g)
+
+	if vertex := g.GetVertex(1); vertex != nil {
+		callback := func(i int) { fmt.Println(i) }
+		BFS(g, vertex, callback)
+	}
+
+}
+
+func BFS(g *graph.Graph, vertex *graph.Vertex, visitCallback func(int)) {
+	q := queue.NewQueueLinkedList()
+	visited := map[int]bool{}
+
+	data := queue.Data(vertex.Key)
+	q.Enqueue(data)
+
+	for q.Size() > 0 {
+		key := q.Dequeue()
+		v := g.GetVertex(int(key))
+
+		if value, ok := visited[v.Key]; !ok || !value {
+			visitCallback(v.Key)
+			visited[v.Key] = true
+
+			for _, neighbor := range v.Adjacencies {
+				if value, ok := visited[neighbor.Key]; !ok || !value {
+					data := queue.Data(neighbor.Key)
+					q.Enqueue(data)
+				}
+			}
+		}
+	}
+}
+
 // type BFSPath struct {
 // 	Source int
 // 	DistTo map[int]int
