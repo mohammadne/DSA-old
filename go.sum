@@ -1,0 +1,6 @@
+github.com/mohammadne/data_structures/graph v0.0.0-20210405115130-295a081fe8ad h1:mvS3WP0Pl5M1tI/eaFLdLtgu49Oc3kZjJIjwFiSN+jo=
+github.com/mohammadne/data_structures/graph v0.0.0-20210405115130-295a081fe8ad/go.mod h1:KCrFb1XoS1nAokTiSPuq7yOV7iXMLvWXNkq+Zkfs+Fc=
+github.com/mohammadne/data_structures/queue v0.0.0-20210405130852-92696449b26b h1:rD3XZI5K0VzctHsATTawApZj6fS6MKC5sHtO/pScqsw=
+github.com/mohammadne/data_structures/queue v0.0.0-20210405130852-92696449b26b/go.mod h1:i51s4ZzqjI4NhoKU329C7fzAxPFP7rBN7ez331G6oI8=
+github.com/mohammadne/data_structures/stack v0.0.0-20210405114751-fd87957202e9 h1:t1j3CEaZnYplDF91JAv+hqEaq2t3uFf1WkBHZ/Aepdc=
+github.com/mohammadne/data_structures/stack v0.0.0-20210405114751-fd87957202e9/go.mod h1:Ob+XBBl4AcSAglu6xuOPTCHvw0LsVs32aYBBHRjQRiM=
