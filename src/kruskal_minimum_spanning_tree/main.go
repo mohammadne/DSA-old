@@ -79,12 +79,14 @@ func find(x int) int {
 	}
 	return x
 }
+
 func max(a, b int) int {
 	if a > b {
 		return a
 	}
 	return b
 }
+
 func min(a, b int) int {
 	if a < b {
 		return a
@@ -100,6 +102,7 @@ func ReadString() string {
 	in.Scan()
 	return in.Text()
 }
+
 func ReadStringSlice(n int) []string {
 	s := make([]string, n)
 	for i := 0; i < n; i++ {
@@ -107,11 +110,13 @@ func ReadStringSlice(n int) []string {
 	}
 	return s
 }
+
 func ReadInt() int {
 	intStr := ReadString()
 	i, _ := strconv.ParseInt(intStr, 10, 32)
 	return int(i)
 }
+
 func ReadIntSlice(n int) []int {
 	arr := make([]int, n)
 	for i := 0; i < n; i++ {
@@ -119,6 +124,7 @@ func ReadIntSlice(n int) []int {
 	}
 	return arr
 }
+
 func init() {
 	//set input
 	in = bufio.NewScanner(os.Stdin)
