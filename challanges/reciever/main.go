@@ -15,6 +15,25 @@ func onLine() {
 	fmt.Scan(&a, &b)
 }
 
+func readFileWithScanner(fn string) (err error) {
+	scanner := bufio.NewScanner(os.Stdin)
+
+	for scanner.Scan() {
+		line := scanner.Text()
+
+		// Process the line here.
+		fmt.Printf(" > Read %d characters\n", len(line))
+		fmt.Printf(" > > %s\n", limitLength(line, 50))
+	}
+
+	if scanner.Err() != nil {
+		fmt.Printf(" > Failed with error %v\n", scanner.Err())
+		return scanner.Err()
+	}
+
+	return
+}
+
 func readFileWithReadString(fn string) (err error) {
 	reader := bufio.NewReader(os.Stdin)
 	var line string
@@ -37,25 +56,6 @@ func readFileWithReadString(fn string) (err error) {
 	if err != io.EOF {
 		fmt.Printf(" > Failed with error: %v\n", err)
 		return err
-	}
-
-	return
-}
-
-func readFileWithScanner(fn string) (err error) {
-	scanner := bufio.NewScanner(os.Stdin)
-
-	for scanner.Scan() {
-		line := scanner.Text()
-
-		// Process the line here.
-		fmt.Printf(" > Read %d characters\n", len(line))
-		fmt.Printf(" > > %s\n", limitLength(line, 50))
-	}
-
-	if scanner.Err() != nil {
-		fmt.Printf(" > Failed with error %v\n", scanner.Err())
-		return scanner.Err()
 	}
 
 	return
