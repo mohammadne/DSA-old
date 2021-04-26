@@ -9,6 +9,8 @@ import (
 	"strings"
 )
 
+// https://stackoverflow.com/questions/26076165/go-find-scan-for-structs-functions
+
 var (
 	fatalError        = "it should not happen, log."
 	errorInvalidInput = "Invalid input. Please enter 1 for more info."
@@ -33,20 +35,20 @@ func main() {
 	}
 }
 
-type add interface {}
-type delete interface {}
+type add interface{}
+type delete interface{}
 
 type city struct {
 	id   int
 	name string
 }
 
-func (c *city) add()  {
-	
+func (c *city) add() {
+
 }
 
-func (c *city) delete()  {
-	
+func (c *city) delete() {
+
 }
 
 type road struct {
