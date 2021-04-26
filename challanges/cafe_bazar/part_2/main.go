@@ -18,6 +18,18 @@ var (
 	help = "Select a number from shown menu and enter. For example 1 is for help."
 )
 
+type citiesSlice []city
+
+type roadsSlice []road
+
+func (cities citiesSlice) add(c city) {
+	_ = append(cities, c)
+}
+
+var cities citiesSlice
+
+var roads roadsSlice
+
 func main() {
 	reader := bufio.NewReader(os.Stdin)
 
@@ -35,20 +47,18 @@ func main() {
 	}
 }
 
-type add interface{}
-type delete interface{}
+// type Reader interface {
+// 	Read(p []byte) (n int, err error)
+// }
+
+// type model interface {
+// 	add()
+// 	delete()
+// }
 
 type city struct {
 	id   int
 	name string
-}
-
-func (c *city) add() {
-
-}
-
-func (c *city) delete() {
-
 }
 
 type road struct {
@@ -87,6 +97,14 @@ func printOptions(reader *bufio.Reader, header string, options []string) int {
 	return number
 }
 
+func getModel(reader *bufio.Reader) int {
+	return printOptions(
+		reader,
+		"Select model:",
+		[]string{"City", "Road"},
+	)
+}
+
 func processMainMenue(reader *bufio.Reader) int {
 	number := printOptions(
 		reader,
@@ -108,12 +126,37 @@ func processMainMenue(reader *bufio.Reader) int {
 	return number
 }
 
-func processAdd(reader *bufio.Reader) {
-	number := printOptions(
-		reader,
-		"Select model:",
-		[]string{"City", "Road"},
-	)
+func processAdd(reader *bufio.Reader, model int) {
+	if model == 0 {
+		model = getModel(reader)
+	}
 
-	_ = number
+	switch model {
+	case 1:
+		var id int
+		fmt.Scan(&id)
+
+		var name string
+		fmt.Scan(&name)
+
+		city := city{
+			id:   id,
+			name: name,
+		}
+
+		cities.add(city)
+
+		fmt.Printf("City with id=%d added!\n", id)
+
+		number := printOptions(
+			reader,
+			"Select your next action",
+			[]string{"Add another City", "Main manu"},
+		)
+
+		switch number {
+		case 1:
+			return processAdd(reader, 1)
+		}
+	}
 }
