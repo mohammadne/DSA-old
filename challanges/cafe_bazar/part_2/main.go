@@ -16,22 +16,6 @@ var (
 	help = "Select a number from shown menu and enter. For example 1 is for help."
 )
 
-type city struct {
-	id   int
-	name string
-}
-
-type road struct {
-	id            int
-	name          string
-	from          int
-	to            int
-	through       []int
-	speedLimit    int
-	length        int
-	biDirectional bool
-}
-
 func main() {
 	reader := bufio.NewReader(os.Stdin)
 
@@ -47,6 +31,33 @@ func main() {
 		log.Fatal(fatalError)
 		os.Exit(1)
 	}
+}
+
+type add interface {}
+type delete interface {}
+
+type city struct {
+	id   int
+	name string
+}
+
+func (c *city) add()  {
+	
+}
+
+func (c *city) delete()  {
+	
+}
+
+type road struct {
+	id            int
+	name          string
+	from          int
+	to            int
+	through       []int
+	speedLimit    int
+	length        int
+	biDirectional bool
 }
 
 func printOptions(reader *bufio.Reader, header string, options []string) int {
