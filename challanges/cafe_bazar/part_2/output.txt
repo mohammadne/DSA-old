@@ -45,10 +45,10 @@ id=?
 name=?
 from=?
 to=?
-through=?
-speed_limit=?
-length=?
-bi_directional=?
+‫‪through‬‬=?
+‫‪speed_limit‬‬=?
+‫‪length‬‬=?
+‫‪bi_directional‬‬=?
 Road with id=1 added!
 Select your next action
 1. Add another Road

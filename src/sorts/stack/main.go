@@ -19,7 +19,22 @@ func (stack *Stack) pop() *StackItem {
 }
 
 func (stack *Stack) push(item *StackItem) {
+	beforeTop := stack.top
+	item.bottom = beforeTop
 	stack.top = item
+}
+
+func (stack *Stack) print() {
+	var popedItem *StackItem
+
+	for {
+		popedItem = stack.pop()
+		if popedItem == nil {
+			break
+		}
+
+		fmt.Println(popedItem.data)
+	}
 }
 
 type StackItem struct {
@@ -50,18 +65,22 @@ func main() {
 	helperStack := Stack{}
 	sort(&mainStack, &helperStack)
 
-	fmt.Println(mainStack)
-	fmt.Println(helperStack)
+	mainStack.print()
+	helperStack.print()
 }
 
 func sort(stack *Stack, helperStack *Stack) {
 	popedItemFromStack := stack.pop()
 	popedItemFromHelperStack := helperStack.pop()
 
-	if popedItemFromStack == nil || popedItemFromHelperStack == nil {
+	if popedItemFromStack == nil {
+		helperStack.push(popedItemFromHelperStack)
 		return
 	} else {
-		if popedItemFromHelperStack.data <= popedItemFromStack.data {
+		if popedItemFromHelperStack == nil {
+			helperStack.push(popedItemFromStack)
+			sort(stack, helperStack)
+		} else if popedItemFromHelperStack.data <= popedItemFromStack.data {
 			helperStack.push(popedItemFromHelperStack)
 			helperStack.push(popedItemFromStack)
 			sort(stack, helperStack)
@@ -71,5 +90,4 @@ func sort(stack *Stack, helperStack *Stack) {
 			sort(stack, helperStack)
 		}
 	}
-
 }

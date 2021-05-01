@@ -15,6 +15,9 @@ var (
 	help = "Select a number from shown menu and enter. For example 1 is for help."
 
 	reader *bufio.Reader
+
+	cities Cities
+	roads  Roads
 )
 
 type City struct {
@@ -91,12 +94,11 @@ func (roads Roads) add(model interface{}) Roads {
 		}
 	}
 
-	if index >= 0 {
-		roads[index] = road
-	} else {
-		roads = append(roads, road)
+	if index == -1 {
+		return append(roads, road)
 	}
 
+	roads[index] = road
 	return roads
 }
 
@@ -121,10 +123,10 @@ func (roads Roads) delete(id int) error {
 func main() {
 	reader = bufio.NewReader(os.Stdin)
 
-	var cities Cities = make([]City, 0, 20)
-	var roads Roads = make([]Road, 0, 10)
+	cities = make([]City, 0, 20)
+	roads = make([]Road, 0, 10)
 
-	processMainMenue(cities, roads)
+	processMainMenue()
 }
 
 func readeLine() string {
@@ -146,9 +148,12 @@ func printOptions(header string, options []string) int {
 
 	fmt.Print(sb.String())
 
-	number, err := strconv.Atoi(readeLine())
+	line := readeLine()
+	number, err := strconv.Atoi(line)
 
 	if err != nil || number < 1 || number > length {
+		// TODO
+		// log.Fatal(err)
 		fmt.Println(errorInvalidInput)
 		return printOptions(header, options)
 	}
@@ -163,28 +168,24 @@ func getModel() int {
 	)
 }
 
-func processMainMenue(cities Cities, roads Roads) {
+func processMainMenue() {
 	number := printOptions(
 		"Main Menu - Select an action:",
 		[]string{"Help", "Add", "Delete", "Path", "Exit"},
 	)
 
-	processMainMenueCallback := func() {
-		processMainMenue(cities, roads)
-	}
-
 	switch number {
 	case 1:
 		fmt.Println(help)
-		processMainMenueCallback()
+		processMainMenue()
 	case 2:
 		model := getModel()
 
 		switch model {
 		case 1:
-			addCity(cities, processMainMenueCallback)
+			addCity()
 		case 2:
-			addRoad(roads, processMainMenueCallback)
+			addRoad()
 		}
 	case 3:
 		model := getModel()
@@ -196,23 +197,23 @@ func processMainMenue(cities Cities, roads Roads) {
 		case 1:
 			err := cities.delete(id)
 			if err != nil {
-				fmt.Printf("City:%d deleted!\n", id)
-			} else {
 				fmt.Printf("City with id %d not found!\n", id)
+			} else {
+				fmt.Printf("City:%d deleted!\n", id)
 			}
 
 		case 2:
 			err := roads.delete(id)
 			if err != nil {
-				fmt.Printf("Road:%d deleted!\n", id)
-			} else {
 				fmt.Printf("Road with id %d not found!\n", id)
+			} else {
+				fmt.Printf("Road:%d deleted!\n", id)
 			}
 		}
 
-		processMainMenueCallback()
+		processMainMenue()
 	case 4:
-		showPath(cities, roads, processMainMenueCallback)
+		showPath()
 	case 5:
 		os.Exit(0)
 	}
@@ -229,7 +230,7 @@ func multiInput(values []string) []string {
 	return output
 }
 
-func addCity(cities Cities, menuCallback func()) {
+func addCity() {
 	input := multiInput([]string{"id", "name"})
 
 	id, _ := strconv.Atoi(input[0])
@@ -239,7 +240,7 @@ func addCity(cities Cities, menuCallback func()) {
 		name: input[1],
 	}
 
-	cities.add(city)
+	cities = cities.add(city)
 
 	fmt.Printf("City with id=%d added!\n", id)
 
@@ -250,13 +251,13 @@ func addCity(cities Cities, menuCallback func()) {
 
 	switch action {
 	case 1:
-		addCity(cities, menuCallback)
+		addCity()
 	case 2:
-		menuCallback()
+		processMainMenue()
 	}
 }
 
-func addRoad(roads Roads, menuCallback func()) {
+func addRoad() {
 	input := multiInput(
 		[]string{
 			"id",
@@ -299,7 +300,7 @@ func addRoad(roads Roads, menuCallback func()) {
 		biDirectional: biDirectional == 1,
 	}
 
-	roads.add(road)
+	roads = roads.add(road)
 
 	fmt.Printf("Road with id=%d added!\n", id)
 
@@ -310,13 +311,13 @@ func addRoad(roads Roads, menuCallback func()) {
 
 	switch action {
 	case 1:
-		addRoad(roads, menuCallback)
+		addRoad()
 	case 2:
-		menuCallback()
+		processMainMenue()
 	}
 }
 
-func showPath(cities Cities, roads Roads, menuCallback func()) {
+func showPath() {
 	values := strings.Split(readeLine(), ":")
 	start, _ := strconv.Atoi(values[0])
 	end, _ := strconv.Atoi(values[1])
@@ -328,35 +329,37 @@ func showPath(cities Cities, roads Roads, menuCallback func()) {
 			index := indexOfId(road.through, start)
 			if index != -1 {
 				index2 := indexOfId(road.through[index:], end)
-				if index2 != -1 || road.to == end {
-					sb.WriteString(pathOut(road, cities))
+				if index2 != -1 {
+					sb.WriteString(pathOut(road, index, index2+index))
+				} else if road.to == end {
+					sb.WriteString(pathOut(road, index, len(cities)-1))
 				}
 			} else if road.to == start {
 				index2 := indexOfId(road.through, end)
 				if index2 != -1 {
-					sb.WriteString(pathOut(road, cities))
+					sb.WriteString(pathOut(road, len(cities)-1, index2))
 				}
 			}
 		} else {
 			index := indexOfId(road.through, start)
 			if index != -1 {
 				index2 := indexOfId(road.through[index:], end)
-				if index2 != -1 || road.to == end {
-					sb.WriteString(pathOut(road, cities))
+				if index2 != -1 {
+					sb.WriteString(pathOut(road, index, index2+index))
+				} else if road.to == end {
+					sb.WriteString(pathOut(road, index, len(cities)-1))
 				}
 			}
 		}
 	}
 
-	fmt.Println("Kashan:Qom via Road T-K: Takes 00:07:30")
-	menuCallback()
+	fmt.Print(sb.String())
+	processMainMenue()
 }
 
-func pathOut(road Road, cities Cities) string {
-	citiesIdMap := make([]int, 0, len(cities))
-
-	startCity := cities[indexOfId(citiesIdMap, road.from)]
-	endCity := cities[indexOfId(citiesIdMap, road.from)]
+func pathOut(road Road, from int, to int) string {
+	startCity := cities[from]
+	endCity := cities[to]
 
 	time := dateTime(road.length, road.speedLimit)
 	return fmt.Sprintf("%s:%s via Road %s: Takes %s\n", startCity.name, endCity.name, road.name, time)
