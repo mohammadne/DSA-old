@@ -16,13 +16,20 @@ var (
 
 	reader *bufio.Reader
 
-	cities Cities
-	roads  Roads
+	countries Countries
+	cities    Cities
+	roads     Roads
 )
 
-type City struct {
+type Country struct {
 	id   int
 	name string
+}
+
+type City struct {
+	id        int
+	name      string
+	countryId int
 }
 
 type Road struct {
@@ -36,93 +43,242 @@ type Road struct {
 	biDirectional bool
 }
 
-// type models interface {
-// 	add(model interface{})
-// 	delete(id int)
-// }
+type Countries []Country
+
+func (countries Countries) find(id int) int {
+	return find(countries, id)
+}
+
+func (countries Countries) add(country Country) {
+	add(countries, country)
+}
+
+func (countries Countries) delete(id int) error {
+	return delete(countries, id)
+}
+
+func (countries Countries) export() string {
+	return export(countries)
+}
 
 type Cities []City
 
-func (cities Cities) add(model interface{}) Cities {
-	city := model.(City)
-
-	index := -1
-	for i, c := range cities {
-		if city.id == c.id {
-			index = i
-			break
-		}
-	}
-
-	if index >= 0 {
-		cities[index] = city
-	} else {
-		cities = append(cities, city)
-	}
-
-	return cities
+func (cities Cities) add(city City) {
+	add(cities, city)
 }
 
 func (cities Cities) delete(id int) error {
-	contains := false
+	return delete(cities, id)
+}
 
-	for i, city := range cities {
-		if city.id == id {
-			cities = append(cities[:i], cities[i+1:]...)
-			contains = true
-			break
-		}
-	}
-
-	if !contains {
-		return errors.New("")
-	}
-
-	return nil
+func (cities Cities) export() string {
+	return export(cities)
 }
 
 type Roads []Road
 
-func (roads Roads) add(model interface{}) Roads {
-	road := model.(Road)
-
-	index := -1
-	for i, r := range roads {
-		if road.id == r.id {
-			index = i
-			break
-		}
-	}
-
-	if index == -1 {
-		return append(roads, road)
-	}
-
-	roads[index] = road
-	return roads
+func (roads Roads) add(road Road) {
+	add(roads, road)
 }
 
 func (roads Roads) delete(id int) error {
+	return delete(roads, id)
+}
+
+func (roads Roads) export() string {
+	return export(roads)
+}
+
+// index in slice based on given id
+func find(models interface{}, id int) int {
+	result := -1
+
+	switch t := models.(type) {
+	case Countries:
+		for index, model := range t {
+			if id == model.id {
+				result = index
+			}
+		}
+
+	case Cities:
+		for index, model := range t {
+			if id == model.id {
+				result = index
+			}
+		}
+
+	case Roads:
+		for index, model := range t {
+			if id == model.id {
+				result = index
+			}
+		}
+	}
+
+	return result
+}
+
+func add(models interface{}, model interface{}) {
+	switch t := models.(type) {
+	case Countries:
+		country := model.(Country)
+
+		index := -1
+		for i, c := range t {
+			if country.id == c.id {
+				index = i
+				break
+			}
+		}
+
+		if index >= 0 {
+			countries[index] = country
+		} else {
+			countries = append(countries, country)
+		}
+
+	case Cities:
+		city := model.(City)
+
+		index := -1
+		for i, c := range t {
+			if city.id == c.id {
+				index = i
+				break
+			}
+		}
+
+		if index >= 0 {
+			cities[index] = city
+		} else {
+			cities = append(cities, city)
+		}
+
+	case Roads:
+		road := model.(Road)
+
+		index := -1
+		for i, c := range t {
+			if road.id == c.id {
+				index = i
+				break
+			}
+		}
+
+		if index >= 0 {
+			roads[index] = road
+		} else {
+			roads = append(roads, road)
+		}
+	}
+}
+
+func delete(models interface{}, id int) error {
 	contains := false
 
-	for i, road := range roads {
-		if road.id == id {
-			roads = append(roads[:i], roads[i+1:]...)
-			contains = true
-			break
+	switch t := models.(type) {
+	case Countries:
+		for i, country := range t {
+			if country.id == id {
+				countries = append(t[:i], t[i+1:]...)
+				contains = true
+				break
+			}
+		}
+
+	case Cities:
+		for i, city := range t {
+			if city.id == id {
+				cities = append(t[:i], t[i+1:]...)
+				contains = true
+				break
+			}
+		}
+
+	case Roads:
+		for i, road := range t {
+			if road.id == id {
+				roads = append(t[:i], t[i+1:]...)
+				contains = true
+				break
+			}
 		}
 	}
 
 	if !contains {
-		return errors.New("")
+		return errors.New("Bad State Error")
 	}
 
 	return nil
+}
+
+func export(models interface{}) string {
+	var sb strings.Builder
+
+	switch t := models.(type) {
+	case Countries:
+		option := 3
+		for _, country := range t {
+			str := fmt.Sprintf("%d\n%d\n%d\n%s\n%d",
+				2,
+				option,
+				country.id,
+				country.name,
+				2,
+			)
+
+			sb.WriteString(str)
+		}
+
+	case Cities:
+		option := 1
+		for _, city := range t {
+			str := fmt.Sprintf("%d\n%d\n%d\n%s\n%d\n%d",
+				2,
+				option,
+				city.id,
+				city.name,
+				city.countryId,
+				2,
+			)
+
+			sb.WriteString(str)
+		}
+
+	case Roads:
+		option := 2
+		for _, road := range t {
+			biDirectional := 0
+			if road.biDirectional {
+				biDirectional = 1
+			}
+
+			str := fmt.Sprintf("%d\n%d\n%d\n%s\n%d\n%d\n%s\n%d\n%d\n%d\n%d",
+				2,
+				option,
+				road.id,
+				road.name,
+				road.from,
+				road.to,
+				strings.Replace(fmt.Sprint(road.through), " ", ",", -1),
+				road.speedLimit,
+				road.length,
+				biDirectional,
+				2,
+			)
+
+			sb.WriteString(str)
+		}
+	}
+
+	return sb.String()
 }
 
 func main() {
 	reader = bufio.NewReader(os.Stdin)
 
+	countries = make([]Country, 0, 20)
 	cities = make([]City, 0, 20)
 	roads = make([]Road, 0, 10)
 
@@ -152,8 +308,6 @@ func printOptions(header string, options []string) int {
 	number, err := strconv.Atoi(line)
 
 	if err != nil || number < 1 || number > length {
-		// TODO
-		// log.Fatal(err)
 		fmt.Println(errorInvalidInput)
 		return printOptions(header, options)
 	}
@@ -164,14 +318,14 @@ func printOptions(header string, options []string) int {
 func getModel() int {
 	return printOptions(
 		"Select model:",
-		[]string{"City", "Road"},
+		[]string{"City", "Road", "Country"},
 	)
 }
 
 func processMainMenue() {
 	number := printOptions(
 		"Main Menu - Select an action:",
-		[]string{"Help", "Add", "Delete", "Path", "Exit"},
+		[]string{"Help", "Add", "Delete", "Path", "export", "Exit"},
 	)
 
 	switch number {
@@ -186,6 +340,8 @@ func processMainMenue() {
 			addCity()
 		case 2:
 			addRoad()
+		case 3:
+			addCountry()
 		}
 	case 3:
 		model := getModel()
@@ -209,12 +365,29 @@ func processMainMenue() {
 			} else {
 				fmt.Printf("Road:%d deleted!\n", id)
 			}
+
+		case 3:
+			err := countries.delete(id)
+			if err != nil {
+				fmt.Printf("Country with id %d not found!\n", id)
+			} else {
+				fmt.Printf("Country:%d deleted!\n", id)
+			}
 		}
 
 		processMainMenue()
 	case 4:
 		showPath()
 	case 5:
+		result := fmt.Sprintf("%s\n%s\n%s",
+			countries.export(),
+			cities.export(),
+			roads.export(),
+		)
+
+		fmt.Println(result)
+		processMainMenue()
+	case 6:
 		os.Exit(0)
 	}
 }
@@ -231,16 +404,18 @@ func multiInput(values []string) []string {
 }
 
 func addCity() {
-	input := multiInput([]string{"id", "name"})
+	input := multiInput([]string{"id", "name", "country_id"})
 
 	id, _ := strconv.Atoi(input[0])
+	countryId, _ := strconv.Atoi(input[2])
 
 	city := City{
-		id:   id,
-		name: input[1],
+		id:        id,
+		name:      input[1],
+		countryId: countryId,
 	}
 
-	cities = cities.add(city)
+	cities.add(city)
 
 	fmt.Printf("City with id=%d added!\n", id)
 
@@ -300,7 +475,7 @@ func addRoad() {
 		biDirectional: biDirectional == 1,
 	}
 
-	roads = roads.add(road)
+	roads.add(road)
 
 	fmt.Printf("Road with id=%d added!\n", id)
 
@@ -312,6 +487,33 @@ func addRoad() {
 	switch action {
 	case 1:
 		addRoad()
+	case 2:
+		processMainMenue()
+	}
+}
+
+func addCountry() {
+	input := multiInput([]string{"id", "name"})
+
+	id, _ := strconv.Atoi(input[0])
+
+	country := Country{
+		id:   id,
+		name: input[1],
+	}
+
+	countries.add(country)
+
+	fmt.Printf("Country with id=%d added!\n", id)
+
+	action := printOptions(
+		"Select your next action",
+		[]string{"Add another Country", "Main Menu"},
+	)
+
+	switch action {
+	case 1:
+		addCountry()
 	case 2:
 		processMainMenue()
 	}
@@ -359,10 +561,13 @@ func showPath() {
 
 func pathOut(road Road, from int, to int) string {
 	startCity := cities[from]
+	startCountry := countries[countries.find(startCity.countryId)]
+
 	endCity := cities[to]
+	endCountry := countries[countries.find(endCity.countryId)]
 
 	time := dateTime(road.length, road.speedLimit)
-	return fmt.Sprintf("%s:%s via Road %s: Takes %s\n", startCity.name, endCity.name, road.name, time)
+	return fmt.Sprintf("%s/%s:%s/%s via Road %s: Takes %s\n", startCountry.name, startCity.name, endCountry.name, endCity.name, road.name, time)
 }
 
 // index == -1 means it's not exist
