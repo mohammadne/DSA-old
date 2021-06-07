@@ -35,7 +35,7 @@ example:
 
 * Verbs: 
 
-Xulu has only three verbs that can be translated to a mathematical operation:
+Xulu has only four verbs that can be translated to a mathematical operation:
 
 abcd = addition
 bcde = subtraction 
@@ -43,7 +43,8 @@ dede = multiplication
 abab = division
 
 * Sentence :
-Any repetition of verbs and names in Xulu forms a sentence. A sentence begins with a verb.
+Any repetition of verbs and names in Xulu forms a sentence. 
+A sentence begins with a verb.
 A verb can be followed by another sentence to form a composite sentence:
 
 * Grammar: 
