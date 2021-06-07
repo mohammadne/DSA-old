@@ -1,4 +1,6 @@
-We have an imaginary language called "Xulu". In this language, each verb comes after a set of names and all the names have English equivalences in numbers.
+We have an imaginary language called "Xulu".
+In this language, each verb comes after a set of names and
+all the names have English equivalences in numbers.
 
 Alphabets in *Xulu* are equivalent to numbers as well.
 - a = 1
@@ -38,13 +40,16 @@ Xulu has only three verbs that can be translated to a mathematical operation:
 abcd = addition
 bcde = subtraction 
 dede = multiplication
+abab = division
 
 * Sentence :
-Any repetition of verbs and names in Xulu forms a sentence. A sentence begins with a verb. A verb can be followed by another sentence to form a composite sentence:
+Any repetition of verbs and names in Xulu forms a sentence. A sentence begins with a verb.
+A verb can be followed by another sentence to form a composite sentence:
 
 * Grammar: 
 
-The Xulu's grammar is not so difficult, in the grammar, the verbs come before the names and the names can be in any quantity right after the verb. 
+The Xulu's grammar is not so difficult, in the grammar, 
+the verbs come before the names and the names can be in any quantity right after the verb. 
 Normally, two verbs do not happen to place after each other, if so, it means they are parts of separate sentences:
       example: 
                 abcd bcde ab ac abab a b it means :
