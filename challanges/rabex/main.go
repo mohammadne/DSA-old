@@ -6,6 +6,7 @@ import (
 )
 
 const (
+	// operators
 	addition       = "abcd"
 	subtraction    = "bcde"
 	multiplication = "dede"
@@ -20,20 +21,53 @@ var worthOfAlphabets = map[byte]byte{
 	byte('e'): 5,
 }
 
-// Sentence has union type charactristics
+type Noun string
+
+func (n Noun) process() int {
+	values := make([]int, 0, len(n))
+
+	repetition := 0
+	current := byte(0)
+
+	for index := 0; index < len(n); index++ {
+		if current == 0 {
+			current = n[index]
+			repetition++
+		} else if current != n[index] {
+			worth := worthOfAlphabets[current]
+			values = append(values, int(repetition)*int(worth))
+
+			current = byte(n[index])
+			repetition = 1
+		} else {
+			repetition++
+		}
+	}
+
+	worth := worthOfAlphabets[current]
+	values = append(values, int(repetition)*int(worth))
+
+	for index := 0; index < len(values); index++ {
+		newVal := values[index] % 5
+		values[index] = newVal * newVal
+	}
+
+	return sumIntSlice(values)
+}
+
 type Sentence struct {
 	verb         string
 	subSentences []Sentence
 
-	noun string
+	noun Noun
 }
 
-func (s Sentence) process() int {
+func (s Sentence) process() float64 {
 	if noun := s.noun; len(noun) != 0 {
-		return processNoun(noun)
+		return float64(noun.process())
 	}
 
-	values := make([]int, 0, len(s.subSentences))
+	values := make([]float64, 0, len(s.subSentences))
 
 	for index := 0; index < len(s.subSentences); index++ {
 		values = append(values, s.subSentences[index].process())
@@ -56,24 +90,20 @@ func (s Sentence) process() int {
 }
 
 func main() {
-	input := "abcd abcd aabbc ab a c ccd dede cccd cd  "
-	processedInput := processString(input)
-	sentence := processTerms(processedInput)
+	input := "abcd bcde ab ac abab a b"
+	splitedInput := strings.Split(input, " ")
+	sentence := buildGeneralizedList(splitedInput)
 
 	value := sentence.process()
 	fmt.Println(value)
 }
 
-func processString(input string) []string {
-	return strings.Split(input, " ")
-}
-
-func processTerms(terms []string) Sentence {
+func buildGeneralizedList(terms []string) Sentence {
 	length := len(terms)
 
 	if length == 1 {
 		return Sentence{
-			noun: terms[0],
+			noun: Noun(terms[0]),
 		}
 	}
 
@@ -93,17 +123,17 @@ func processTerms(terms []string) Sentence {
 		lastVerbIndex = verbsIndex[0]
 	}
 
-	for index := 0; index < lastVerbIndex; index++ {
-		sentence := Sentence{noun: terms[index]}
+	for index := 1; index < lastVerbIndex; index++ {
+		sentence := Sentence{noun: Noun(terms[index])}
 		subSentences = append(subSentences, sentence)
 	}
 
 	for index := 0; index < verbsLength; index++ {
 		if verbsLength-index <= 1 {
-			sentence := processTerms(terms[verbsIndex[index]:])
+			sentence := buildGeneralizedList(terms[verbsIndex[index]:])
 			subSentences = append(subSentences, sentence)
 		} else {
-			sentence := processTerms(terms[verbsIndex[index]:verbsIndex[index+1]])
+			sentence := buildGeneralizedList(terms[verbsIndex[index]:verbsIndex[index+1]])
 			subSentences = append(subSentences, sentence)
 		}
 	}
@@ -119,38 +149,6 @@ func isVerb(input string) bool {
 		input == subtraction ||
 		input == multiplication ||
 		input == division
-}
-
-func processNoun(str string) int {
-	values := make([]int, 0, len(str))
-
-	repetition := 0
-	current := byte(0)
-
-	for index := 0; index < len(str); index++ {
-		if current == 0 {
-			current = str[index]
-			repetition++
-		} else if current != str[index] {
-			worth := worthOfAlphabets[current]
-			values = append(values, int(repetition)*int(worth))
-
-			current = byte(str[index])
-			repetition = 1
-		} else {
-			repetition++
-		}
-	}
-
-	worth := worthOfAlphabets[current]
-	values = append(values, int(repetition)*int(worth))
-
-	for index := 0; index < len(values); index++ {
-		newVal := values[index] % 5
-		values[index] = newVal * newVal
-	}
-
-	return sumIntSlice(values)
 }
 
 func sumIntSlice(slice []int) int {
