@@ -24,7 +24,7 @@ func RandStringRunes(n int) string {
 }
 
 func main() {
-	url := "http://localhost:8088"
+	url := "http://localhost:8081"
 	fmt.Println("URL:>", url)
 
 	for {

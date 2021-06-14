@@ -14,7 +14,7 @@ import (
 var (
 	serversPorts = []int{
 		8081,
-		8092,
+		8082,
 		8083,
 		8084,
 	}
