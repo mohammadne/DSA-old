@@ -68,7 +68,7 @@ type Desk struct {
 }
 
 func (d *Desk) canReserve(reserve *Reserve) bool {
-	if !areEqual(d.features, reserve.features) {
+	if !isBiggerThan(reserve.features, d.features) {
 		return false
 	}
 
@@ -308,6 +308,29 @@ func areEqual(a, b []int) bool {
 		}
 	}
 	return true
+}
+
+func isBiggerThan(requestFeatures, deskFeatures []int) bool {
+	satisfy1 := true
+
+	index2 := 0
+	for index1 := 0; index1 < len(requestFeatures); index1++ {
+		satisfy2 := false
+
+		for ; index2 < len(deskFeatures); index2++ {
+			if requestFeatures[index1] == deskFeatures[index2] {
+				satisfy2 = true
+				break
+			}
+		}
+
+		if !satisfy2 {
+			satisfy1 = false
+			break
+		}
+	}
+
+	return satisfy1
 }
 
 func stringToFeatures(input string) []int {
