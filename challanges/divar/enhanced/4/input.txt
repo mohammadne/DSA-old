@@ -1,0 +1,14 @@
+4
+1 3 2 5
+2 1
+2 free
+0011 0000
+1 special
+1110
+1 request_desk milad free 4
+1 reserve_desk ali 2 3 0011
+1 reserve_desk ali 2 3 1110
+2 request_desk zahra free 5
+2 request_desk pouria special 1
+6 request_desk pouria special 1
+end
