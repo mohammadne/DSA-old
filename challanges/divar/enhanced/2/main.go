@@ -8,17 +8,24 @@ import (
 	"strings"
 )
 
+const (
+	freeFloorType    = "free"
+	specialFloorType = "special"
+)
+
 var (
 	reader *bufio.Reader
 
-	gotDesk = "%s got desk %d-%d\n"
-	noDesk  = "no desk available"
+	gotDesk      = "%s got desk %d-%d"
+	gotDeskPrice = "%s got desk %d-%d for %d"
+	noDesk       = "no desk available"
 )
 
 type Request struct {
-	user     string
-	start    int
-	duration int
+	user      string
+	start     int
+	duration  int
+	isSpecial bool
 }
 
 func (req1 *Request) crossEachOther(req2 *Request) bool {
@@ -66,14 +73,29 @@ func (d *Desk) request(req *Request) bool {
 type Floor struct {
 	number int
 	desks  []Desk
+	price  int
 }
 
 func (floor *Floor) request(req *Request) bool {
+	cond1 := !req.isSpecial && floor.price != 0
+	cond2 := req.isSpecial && floor.price == 0
+
+	if cond1 || cond2 {
+		return false
+	}
+
 	desks := floor.desks
 
 	for index := 0; index < len(desks); index++ {
 		if desks[index].request(req) {
-			fmt.Printf(gotDesk, req.user, floor.number+1, index+1)
+			var text string
+			if price := floor.price; price != 0 {
+				text = fmt.Sprintf(gotDeskPrice, req.user, floor.number+1, index+1, price)
+			} else {
+				text = fmt.Sprintf(gotDesk, req.user, floor.number+1, index+1)
+			}
+
+			fmt.Println(text)
 			return true
 		}
 	}
@@ -86,9 +108,8 @@ type Floors []Floor
 func (floors Floors) request(req *Request) {
 	for index := 0; index < len(floors); index++ {
 		floor := floors[index]
-		canRequest := floor.request(req)
 
-		if canRequest {
+		if canRequest := floor.request(req); canRequest {
 			return
 		}
 	}
@@ -109,7 +130,9 @@ func readLine() string {
 
 func processInput() {
 	line := readLine()
-	floorsNum, _ := strconv.Atoi(line)
+	values := strings.Split(line, " ")
+	floorsNum, _ := strconv.Atoi(values[0])
+	specialPrice, _ := strconv.Atoi(values[1])
 
 	floors := make(Floors, 0, floorsNum)
 
@@ -117,7 +140,14 @@ func processInput() {
 		floor := Floor{number: index, desks: make([]Desk, 0)}
 
 		line := readLine()
-		desksNum, _ := strconv.Atoi(line)
+		values := strings.Split(line, " ")
+		desksNum, _ := strconv.Atoi(values[0])
+		floorType := values[1]
+
+		if floorType == specialFloorType {
+			floor.price = specialPrice
+		}
+
 		for index := 0; index < desksNum; index++ {
 			desk := Desk{number: index, requests: make([]Request, 0)}
 			floor.desks = append(floor.desks, desk)
@@ -135,15 +165,16 @@ func processInput() {
 
 		values := strings.Split(line, " ")
 		start, _ := strconv.Atoi(values[0])
-		// requestType := values[1]
 		user := values[2]
-		duration, _ := strconv.Atoi(values[3])
+		floorType := values[3]
+		duration, _ := strconv.Atoi(values[4])
 
 		floors.request(
 			&Request{
-				start:    start,
-				user:     user,
-				duration: duration,
+				start:     start,
+				user:      user,
+				duration:  duration,
+				isSpecial: floorType == specialFloorType,
 			},
 		)
 
