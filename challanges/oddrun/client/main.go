@@ -2,55 +2,66 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"math/rand"
 	"net/http"
+	"strings"
 	"time"
 )
 
-func init() {
-	rand.Seed(time.Now().UnixNano())
-}
+const (
+	letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+)
 
-var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
-
-func RandStringRunes(n int) string {
-	b := make([]rune, n)
-	for i := range b {
-		b[i] = letterRunes[rand.Intn(len(letterRunes))]
-	}
-	return string(b)
+type Body struct {
+	Key   string `json:"key"`
+	Value string `json:"value"`
 }
 
 func main() {
-	url := "http://localhost:8081"
-	fmt.Println("URL:>", url)
+	rand.Seed(time.Now().UnixNano())
 
 	for {
-		randomKey := RandStringRunes(10)
-		randomValue := RandStringRunes(10)
-
-		txt := fmt.Sprintf("{\"key\":\"%s\", \"value\":\"%s\"}", randomKey, randomValue)
-		var jsonStr = []byte(txt)
-
-		req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonStr))
-		req.Header.Set("X-Custom-Header", "myvalue")
-		req.Header.Set("Content-Type", "application/json")
-
-		client := &http.Client{}
-		resp, err := client.Do(req)
-		if err != nil {
-			panic(err)
-		}
-		defer resp.Body.Close()
-
-		fmt.Println("response Status:", resp.Status)
-		fmt.Println("response Headers:", resp.Header)
-		body, _ := ioutil.ReadAll(resp.Body)
-		fmt.Println("response Body:", string(body))
+		postRequest(
+			"http://localhost:8081",
+			&Body{
+				Key:   RandomString(10),
+				Value: RandomString(10),
+			},
+		)
 
 		time.Sleep(time.Second)
 	}
+}
 
+func postRequest(url string, body interface{}) {
+	byteBody, _ := json.Marshal(&body)
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(byteBody))
+	req.Header.Set("X-Custom-Header", "myvalue")
+	req.Header.Set("Content-Type", "application/json")
+	if err != nil {
+		panic(err)
+	}
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("url:%s, status:%s\n", url, resp.Status)
+
+	defer resp.Body.Close()
+}
+
+func RandomString(count int) string {
+	var sb strings.Builder
+
+	for len(sb.String()) != count {
+		randomNumber := rand.Intn(len(letters))
+		sb.WriteByte(letters[randomNumber])
+	}
+
+	return sb.String()
 }

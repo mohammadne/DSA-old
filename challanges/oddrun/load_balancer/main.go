@@ -12,15 +12,15 @@ import (
 )
 
 var (
-	serversPorts = []int{
-		8081,
-		8082,
-		8083,
-		8084,
+	servers = []http.Server{
+		{Addr: "http://localhost:8081"},
+		{Addr: "http://localhost:8082"},
+		{Addr: "http://localhost:8083"},
+		{Addr: "http://localhost:8084"},
 	}
 )
 
-type BodyScheme struct {
+type Body struct {
 	Key   string `json:"key"`
 	Value string `json:"value"`
 }
@@ -37,7 +37,7 @@ func main() {
 func hello(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(r.Body)
 
-	b := BodyScheme{}
+	b := Body{}
 	err := json.Unmarshal(body, &b)
 	if err != nil {
 		panic(err)
@@ -45,9 +45,9 @@ func hello(w http.ResponseWriter, r *http.Request) {
 
 	md5Key := md5.Sum([]byte(b.Key))
 	byteToInt := ByteArrayToInt(md5Key)
-	remain := byteToInt % int64(len(serversPorts))
+	remain := byteToInt % int64(len(servers))
 
-	request(fmt.Sprintf("http://localhost:%d", serversPorts[remain]), r.Body)
+	request(servers[remain].Addr, r.Body)
 }
 
 func ByteArrayToInt(arr [16]byte) int64 {
