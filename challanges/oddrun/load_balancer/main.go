@@ -26,7 +26,7 @@ type Body struct {
 }
 
 func main() {
-	http.HandleFunc("/", hello)
+	http.HandleFunc("/", balance)
 
 	fmt.Printf("Starting server for testing HTTP POST...\n")
 	if err := http.ListenAndServe(":8088", nil); err != nil {
@@ -34,7 +34,7 @@ func main() {
 	}
 }
 
-func hello(w http.ResponseWriter, r *http.Request) {
+func balance(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(r.Body)
 
 	b := Body{}
@@ -62,7 +62,6 @@ func ByteArrayToInt(arr [16]byte) int64 {
 	}
 
 	return val
-
 }
 
 func request(url string, body io.Reader) {

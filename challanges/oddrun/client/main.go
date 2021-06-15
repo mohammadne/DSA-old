@@ -24,7 +24,7 @@ func main() {
 
 	for {
 		postRequest(
-			"http://localhost:8081",
+			"http://localhost:8090",
 			&Body{
 				Key:   RandomString(10),
 				Value: RandomString(10),
@@ -38,7 +38,6 @@ func main() {
 func postRequest(url string, body interface{}) {
 	byteBody, _ := json.Marshal(&body)
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(byteBody))
-	req.Header.Set("X-Custom-Header", "myvalue")
 	req.Header.Set("Content-Type", "application/json")
 	if err != nil {
 		panic(err)
