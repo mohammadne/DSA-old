@@ -40,6 +40,10 @@ func GetObjectController(w http.ResponseWriter, r *http.Request) {
 
 	if !isFileExists(path) {
 		remain := id % int64(len(servers))
+		if remain < 0 {
+			remain *= -1
+		}
+
 		getRequest(servers[remain].Addr + "/" + strId)
 		return
 	}
