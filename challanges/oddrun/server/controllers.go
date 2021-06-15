@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"crypto/md5"
 	"encoding/json"
 	"io/ioutil"
@@ -42,17 +41,16 @@ func GetObjectController(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	file, err := openFile(path)
+	bytes, err := readFile(path)
 	if err != nil {
 		panic(err)
 	}
-	defer file.Close()
 
-	scanner := bufio.NewScanner(file)
+	values := strings.Split(string(bytes), "\n")
 
 	body := Body{
-		Key:   scanner.Text(),
-		Value: scanner.Text(),
+		Key:   values[0],
+		Value: values[1],
 	}
 
 	bytesBody, err := json.Marshal(body)

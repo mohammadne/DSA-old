@@ -1,11 +1,7 @@
 package main
 
 import (
-	"bytes"
-	"encoding/json"
-	"fmt"
 	"math/rand"
-	"net/http"
 	"strings"
 	"time"
 )
@@ -19,41 +15,6 @@ type Body struct {
 	Value string `json:"value"`
 }
 
-func main() {
-	rand.Seed(time.Now().UnixNano())
-
-	for {
-		postRequest(
-			"http://localhost:8090",
-			&Body{
-				Key:   RandomString(10),
-				Value: RandomString(10),
-			},
-		)
-
-		time.Sleep(time.Second)
-	}
-}
-
-func postRequest(url string, body interface{}) {
-	byteBody, _ := json.Marshal(&body)
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(byteBody))
-	req.Header.Set("Content-Type", "application/json")
-	if err != nil {
-		panic(err)
-	}
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Printf("url:%s, status:%s\n", url, resp.Status)
-
-	defer resp.Body.Close()
-}
-
 func RandomString(count int) string {
 	var sb strings.Builder
 
@@ -63,4 +24,33 @@ func RandomString(count int) string {
 	}
 
 	return sb.String()
+}
+
+func main() {
+	rand.Seed(time.Now().UnixNano())
+
+	getRequest(
+		"http://localhost:8090",
+		"mohammad",
+	)
+
+	// postRequest(
+	// 	"http://localhost:8090",
+	// 	&Body{
+	// 		Key:   "mohammad",
+	// 		Value: "nasr",
+	// 	},
+	// )
+
+	// for {
+	// 	postRequest(
+	// 		"http://localhost:8090",
+	// 		&Body{
+	// 			Key:   RandomString(10),
+	// 			Value: RandomString(10),
+	// 		},
+	// 	)
+
+	// 	time.Sleep(time.Second)
+	// }
 }

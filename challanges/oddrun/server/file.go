@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io/ioutil"
 	"os"
 )
 
@@ -10,14 +11,6 @@ func createDirIfMissed(dirName string) error {
 	}
 
 	return nil
-}
-
-func getFile(filename string) (*os.File, error) {
-	if isFileExists(filename) {
-		return openFile(filename)
-	}
-
-	return os.Create(filename)
 }
 
 func isFileExists(filename string) bool {
@@ -33,10 +26,20 @@ func isFileExists(filename string) bool {
 	return true
 }
 
-func openFile(filename string) (*os.File, error) {
-	return os.OpenFile(filename, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
+func readFile(filename string) ([]byte, error) {
+	return ioutil.ReadFile(filename)
 }
 
 func createFile(filename string) (*os.File, error) {
-	return os.Create(filename)
+	file, err := os.Create(filename)
+	if err != nil {
+		return nil, err
+	}
+
+	err = os.Chmod(filename, os.ModePerm)
+	if err != nil {
+		return nil, err
+	}
+
+	return file, nil
 }
