@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 )
 
 // go run main.go < in.txt > out.txt
@@ -15,7 +16,7 @@ func onLine() {
 	fmt.Scan(&a, &b)
 }
 
-func readFileWithScanner(fn string) (err error) {
+func readFileWithScanner() (err error) {
 	scanner := bufio.NewScanner(os.Stdin)
 
 	for scanner.Scan() {
@@ -34,7 +35,7 @@ func readFileWithScanner(fn string) (err error) {
 	return
 }
 
-func readFileWithReadString(fn string) (err error) {
+func readFileWithReadString() (err error) {
 	reader := bufio.NewReader(os.Stdin)
 	var line string
 
@@ -43,6 +44,7 @@ func readFileWithReadString(fn string) (err error) {
 		if err != nil && err != io.EOF {
 			break
 		}
+		line = strings.TrimSuffix(line, "\n")
 
 		// Process the line here.
 		fmt.Printf(" > Read %d characters\n", len(line))
@@ -61,7 +63,7 @@ func readFileWithReadString(fn string) (err error) {
 	return
 }
 
-func readFileWithReadLine(fn string) (err error) {
+func readFileWithReadLine() (err error) {
 	reader := bufio.NewReader(os.Stdin)
 
 	for {
