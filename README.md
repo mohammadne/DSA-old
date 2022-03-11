@@ -1,6 +1,6 @@
 # DSA
 
-> Algorithms & Data Structure
+> Algorithms & Data Structures
 
 ## Rsources
 - https://www.hackerearth.com/practice/algorithms/
