@@ -1,11 +1,13 @@
 # DSA
 
-> Algorithms & Data Structures
+> Data Structures & Algorithms
 
 ## Rsources
-- https://www.hackerearth.com/practice/algorithms/
+
+- <https://www.hackerearth.com/practice/algorithms/>
 
 ### Our focus is on the problem
 
-### any help and contribution is welcome.
+### any help and contribution is welcome
+
 ### thanks, mohammad
