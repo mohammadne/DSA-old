@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/mohammadne/data_structures/graph"
-	"github.com/mohammadne/data_structures/queue"
+	"github.com/mohammadne/DSA/data_structures/graph"
+	"github.com/mohammadne/DSA/data_structures/queue"
 )
 
 func main() {
