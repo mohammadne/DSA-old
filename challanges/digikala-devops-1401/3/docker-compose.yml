@@ -1,0 +1,14 @@
+version: "2"
+services:
+  cache:
+    image: registry.gitlab.com/qio/standard/redis:latest
+    container_name: redis
+    restart: always
+    ports:
+      - '6379:6379'
+    deploy:
+      resources:
+        limits:
+          memory: 30M
+        reservations:
+          memory: 30M
