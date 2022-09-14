@@ -1,9 +1,0 @@
-2 10
-1 free
-2 special
-1 request_desk milad free 3
-1 request_desk erfan free 1
-2 request_desk pouria special 7
-3 request_desk erfan special 1
-6 request_desk milad special 2
-end

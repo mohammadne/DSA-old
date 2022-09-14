@@ -1,8 +1,0 @@
-2 10
-1 free
-1 special
-1 request_desk milad free 2
-1 reserve_desk ali 2 3
-2 request_desk pouria special 1
-6 request_desk pouria special 1
-end
